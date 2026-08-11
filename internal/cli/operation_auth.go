@@ -475,7 +475,8 @@ func credentialSatisfies(requirement spec.CredentialRequirement, credential *con
 	if len(requirement.Needs) == 0 {
 		return nil
 	}
-	if authCfg != nil && authCfg.Type == "dpop" && authCfg.Params["source"] != "" && authCfg.Params["reference"] != "" {
+	if authCfg != nil && authCfg.Type == "dpop" && authCfg.Params["source"] != "" && authCfg.Params["reference"] != "" &&
+		len(credential.Satisfies) == 0 && strings.TrimSpace(authCfg.Params["scopes"]) == "" {
 		return nil
 	}
 	satisfies := credential.Satisfies

@@ -52,6 +52,50 @@ func TestPlanOperationAuthRejectsMissingRequirementValues(t *testing.T) {
 	}
 }
 
+func TestPlanOperationAuthUsesDeclaredCoverageForDynamicDPoPCredential(t *testing.T) {
+	c := &CLI{}
+	prof := &config.ProfileConfig{Credentials: map[string]*config.CredentialConfig{
+		"ResourceOAuth": {
+			Auth: &config.AuthConfig{Type: "dpop", Params: map[string]string{
+				"source": "realmroot", "reference": "selected-reference",
+			}},
+			Satisfies: []string{"items:read"},
+		},
+	}}
+	policy := &operationAuthPolicy{CredentialAlternatives: []spec.CredentialAlternative{
+		{{ID: "ResourceOAuth", Kind: "oauth2-dpop", Needs: []string{"items:write"}}},
+		{{ID: "ResourceOAuth", Kind: "oauth2-dpop", Needs: []string{"items:read"}}},
+	}}
+
+	selected, handled, err := c.planOperationAuth("svc", "default", prof, policy)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !handled || len(selected) != 1 || strings.Join(selected[0].requirement.Needs, " ") != "items:read" {
+		t.Fatalf("selected = %#v, handled = %t", selected, handled)
+	}
+}
+
+func TestPlanOperationAuthLeavesUnscopedDynamicDPoPCredentialToItsResolver(t *testing.T) {
+	c := &CLI{}
+	prof := &config.ProfileConfig{Credentials: map[string]*config.CredentialConfig{
+		"ResourceOAuth": {Auth: &config.AuthConfig{Type: "dpop", Params: map[string]string{
+			"source": "realmroot", "reference": "dynamic-reference",
+		}}},
+	}}
+	policy := &operationAuthPolicy{CredentialAlternatives: []spec.CredentialAlternative{{{
+		ID: "ResourceOAuth", Kind: "oauth2-dpop", Needs: []string{"items:read"},
+	}}}}
+
+	selected, handled, err := c.planOperationAuth("svc", "default", prof, policy)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !handled || len(selected) != 1 || selected[0].requirement.ID != "ResourceOAuth" {
+		t.Fatalf("selected = %#v, handled = %t", selected, handled)
+	}
+}
+
 func TestPlanOperationAuthDerivesSatisfiesFromAuthProfileScopes(t *testing.T) {
 	c := &CLI{cfg: &config.Config{
 		AuthProfiles: map[string]*config.AuthConfig{
