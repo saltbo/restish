@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rest-sh/restish/v2/internal/fileutil"
+	"github.com/saltbo/restish/v2/internal/fileutil"
 )
 
 func TestLoadAndSaveTokenCache(t *testing.T) {

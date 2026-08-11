@@ -10,7 +10,7 @@ import (
 	"sync/atomic"
 	"testing"
 
-	cachepkg "github.com/rest-sh/restish/v2/internal/cache"
+	cachepkg "github.com/saltbo/restish/v2/internal/cache"
 )
 
 func newCacheApp(t *testing.T, cacheDir string) *testApp {

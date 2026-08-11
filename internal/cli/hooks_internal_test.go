@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	internalplugin "github.com/rest-sh/restish/v2/internal/plugin"
-	pluginwire "github.com/rest-sh/restish/v2/plugin"
+	internalplugin "github.com/saltbo/restish/v2/internal/plugin"
+	pluginwire "github.com/saltbo/restish/v2/plugin"
 )
 
 func TestIndexPluginsByHook(t *testing.T) {

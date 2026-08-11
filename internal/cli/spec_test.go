@@ -10,9 +10,9 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/rest-sh/restish/v2/config"
-	"github.com/rest-sh/restish/v2/internal/cli"
-	"github.com/rest-sh/restish/v2/internal/spec"
+	"github.com/saltbo/restish/v2/config"
+	"github.com/saltbo/restish/v2/internal/cli"
+	"github.com/saltbo/restish/v2/internal/spec"
 )
 
 // minimalOpenAPI is the smallest valid OpenAPI 3.1 spec for use in tests.

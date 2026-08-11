@@ -13,8 +13,8 @@ import (
 	"github.com/pb33f/libopenapi/index"
 	"github.com/spf13/cobra"
 
-	"github.com/rest-sh/restish/v2/config"
-	"github.com/rest-sh/restish/v2/internal/spec"
+	"github.com/saltbo/restish/v2/config"
+	"github.com/saltbo/restish/v2/internal/spec"
 )
 
 type failingDocument struct {

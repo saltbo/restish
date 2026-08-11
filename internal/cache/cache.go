@@ -18,7 +18,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/rest-sh/restish/v2/internal/fileutil"
+	"github.com/saltbo/restish/v2/internal/fileutil"
 )
 
 // DefaultMaxBytes is the default maximum cache size (100 MiB).

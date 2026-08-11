@@ -13,8 +13,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/rest-sh/restish/v2/internal/cache"
-	"github.com/rest-sh/restish/v2/internal/secrets"
+	"github.com/saltbo/restish/v2/internal/cache"
+	"github.com/saltbo/restish/v2/internal/secrets"
 	"github.com/sandrolain/httpcache"
 )
 

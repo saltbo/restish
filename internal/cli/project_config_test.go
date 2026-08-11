@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	restishcli "github.com/rest-sh/restish/v2/internal/cli"
+	restishcli "github.com/saltbo/restish/v2/internal/cli"
 )
 
 func newProjectConfigTestCLI(t *testing.T) (*restishcli.CLI, *bytes.Buffer, *bytes.Buffer) {

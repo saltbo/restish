@@ -3,7 +3,7 @@ package auth
 import (
 	"context"
 	"fmt"
-	"github.com/rest-sh/restish/v2/auth"
+	"github.com/saltbo/restish/v2/auth"
 	"net/http"
 	"net/url"
 )

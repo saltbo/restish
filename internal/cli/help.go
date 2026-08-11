@@ -4,7 +4,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/rest-sh/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/output"
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
 )

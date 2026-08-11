@@ -17,7 +17,7 @@ import (
 	"testing"
 
 	"github.com/andybalholm/brotli"
-	"github.com/rest-sh/restish/v2/internal/content"
+	"github.com/saltbo/restish/v2/internal/content"
 )
 
 var reg = content.Default()

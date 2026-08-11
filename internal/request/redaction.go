@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/rest-sh/restish/v2/internal/secrets"
+	"github.com/saltbo/restish/v2/internal/secrets"
 )
 
 type credentialRedactionContextKey struct{}

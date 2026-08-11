@@ -5,7 +5,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/rest-sh/restish/v2/internal/spec"
+	"github.com/saltbo/restish/v2/internal/spec"
 )
 
 func (c *CLI) printXCLIExtensionSummary(report spec.XCLIExtensionReport) {

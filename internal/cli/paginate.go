@@ -10,10 +10,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/rest-sh/restish/v2/config"
-	"github.com/rest-sh/restish/v2/internal/filter"
-	"github.com/rest-sh/restish/v2/internal/output"
-	"github.com/rest-sh/restish/v2/internal/request"
+	"github.com/saltbo/restish/v2/config"
+	"github.com/saltbo/restish/v2/internal/filter"
+	"github.com/saltbo/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/request"
 	"github.com/spf13/cobra"
 )
 

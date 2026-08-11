@@ -16,8 +16,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/rest-sh/restish/v2/internal/plugin"
-	"github.com/rest-sh/restish/v2/internal/spec"
+	"github.com/saltbo/restish/v2/internal/plugin"
+	"github.com/saltbo/restish/v2/internal/spec"
 )
 
 // installHookPlugin copies testHookPluginBin into pluginsParent/plugins/ and

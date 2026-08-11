@@ -15,8 +15,8 @@ import (
 
 	"github.com/alecthomas/chroma/v2"
 	"github.com/alecthomas/chroma/v2/formatters"
-	"github.com/rest-sh/restish/v2/internal/output"
-	officialthemes "github.com/rest-sh/restish/v2/themes"
+	"github.com/saltbo/restish/v2/internal/output"
+	officialthemes "github.com/saltbo/restish/v2/themes"
 	"github.com/spf13/cobra"
 )
 

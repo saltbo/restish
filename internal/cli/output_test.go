@@ -13,7 +13,7 @@ import (
 	"testing"
 
 	"github.com/fxamacker/cbor/v2"
-	"github.com/rest-sh/restish/v2/internal/cli"
+	"github.com/saltbo/restish/v2/internal/cli"
 )
 
 func useCBORResponse(t *testing.T, c *cli.CLI, status int, value any) []byte {

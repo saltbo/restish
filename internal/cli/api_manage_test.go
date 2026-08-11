@@ -17,11 +17,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rest-sh/restish/v2/auth"
-	"github.com/rest-sh/restish/v2/config"
-	cachepkg "github.com/rest-sh/restish/v2/internal/cache"
-	restishcli "github.com/rest-sh/restish/v2/internal/cli"
-	"github.com/rest-sh/restish/v2/internal/spec"
+	"github.com/saltbo/restish/v2/auth"
+	"github.com/saltbo/restish/v2/config"
+	cachepkg "github.com/saltbo/restish/v2/internal/cache"
+	restishcli "github.com/saltbo/restish/v2/internal/cli"
+	"github.com/saltbo/restish/v2/internal/spec"
 )
 
 // specWithXCLIConfig returns an OpenAPI spec with x-cli-config pre-populating

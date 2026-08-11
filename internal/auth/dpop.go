@@ -20,7 +20,7 @@ import (
 	"strings"
 	"time"
 
-	publicauth "github.com/rest-sh/restish/v2/auth"
+	publicauth "github.com/saltbo/restish/v2/auth"
 )
 
 // DPoPCredentialDescription is the public acquisition metadata supplied by a

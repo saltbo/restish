@@ -17,9 +17,9 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 
-	"github.com/rest-sh/restish/v2/config"
-	openapiparam "github.com/rest-sh/restish/v2/internal/openapi"
-	"github.com/rest-sh/restish/v2/internal/spec"
+	"github.com/saltbo/restish/v2/config"
+	openapiparam "github.com/saltbo/restish/v2/internal/openapi"
+	"github.com/saltbo/restish/v2/internal/spec"
 )
 
 const (

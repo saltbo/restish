@@ -13,12 +13,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rest-sh/restish/v2/config"
-	"github.com/rest-sh/restish/v2/internal/cache"
-	internalplugin "github.com/rest-sh/restish/v2/internal/plugin"
-	"github.com/rest-sh/restish/v2/internal/request"
-	"github.com/rest-sh/restish/v2/internal/secrets"
-	"github.com/rest-sh/restish/v2/internal/spec"
+	"github.com/saltbo/restish/v2/config"
+	"github.com/saltbo/restish/v2/internal/cache"
+	internalplugin "github.com/saltbo/restish/v2/internal/plugin"
+	"github.com/saltbo/restish/v2/internal/request"
+	"github.com/saltbo/restish/v2/internal/secrets"
+	"github.com/saltbo/restish/v2/internal/spec"
 	"github.com/spf13/cobra"
 )
 

@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/base64"
 	"errors"
-	"github.com/rest-sh/restish/v2/auth"
+	"github.com/saltbo/restish/v2/auth"
 	"net/http"
 	"net/url"
 	"strings"

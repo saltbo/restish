@@ -15,13 +15,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rest-sh/restish/v2/auth"
-	"github.com/rest-sh/restish/v2/config"
-	authpkg "github.com/rest-sh/restish/v2/internal/auth"
-	"github.com/rest-sh/restish/v2/internal/output"
-	"github.com/rest-sh/restish/v2/internal/procutil"
-	"github.com/rest-sh/restish/v2/internal/request"
-	"github.com/rest-sh/restish/v2/internal/secrets"
+	"github.com/saltbo/restish/v2/auth"
+	"github.com/saltbo/restish/v2/config"
+	authpkg "github.com/saltbo/restish/v2/internal/auth"
+	"github.com/saltbo/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/procutil"
+	"github.com/saltbo/restish/v2/internal/request"
+	"github.com/saltbo/restish/v2/internal/secrets"
 	"github.com/spf13/cobra"
 )
 

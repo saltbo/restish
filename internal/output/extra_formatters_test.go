@@ -12,7 +12,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/rest-sh/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/output"
 )
 
 var errFailingWriter = errors.New("write failed")

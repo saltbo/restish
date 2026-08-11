@@ -9,8 +9,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/rest-sh/restish/v2/plugin"
 	"github.com/fxamacker/cbor/v2"
+	"github.com/saltbo/restish/v2/plugin"
 )
 
 func main() {

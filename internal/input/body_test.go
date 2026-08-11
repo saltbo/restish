@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rest-sh/restish/v2/internal/input"
+	"github.com/saltbo/restish/v2/internal/input"
 )
 
 func TestBody_NoArgsNoStdin(t *testing.T) {

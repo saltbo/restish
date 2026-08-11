@@ -11,12 +11,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	authpkg "github.com/rest-sh/restish/v2/internal/auth"
-	"github.com/rest-sh/restish/v2/internal/output"
-	"github.com/rest-sh/restish/v2/internal/plugin"
-	"github.com/rest-sh/restish/v2/internal/request"
-	"github.com/rest-sh/restish/v2/internal/spec"
-	pluginwire "github.com/rest-sh/restish/v2/plugin"
+	authpkg "github.com/saltbo/restish/v2/internal/auth"
+	"github.com/saltbo/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/plugin"
+	"github.com/saltbo/restish/v2/internal/request"
+	"github.com/saltbo/restish/v2/internal/spec"
+	pluginwire "github.com/saltbo/restish/v2/plugin"
 )
 
 func (c *CLI) pluginForHook(name, hook string) (plugin.Plugin, bool) {

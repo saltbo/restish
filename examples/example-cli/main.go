@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	restish "github.com/rest-sh/restish/v2"
+	restish "github.com/saltbo/restish/v2"
 )
 
 func main() {

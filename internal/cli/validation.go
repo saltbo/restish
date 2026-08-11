@@ -8,7 +8,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/rest-sh/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/output"
 	"github.com/santhosh-tekuri/jsonschema/v6"
 )
 

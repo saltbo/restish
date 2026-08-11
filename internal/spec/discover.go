@@ -16,9 +16,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/rest-sh/restish/v2/internal/hypermedia"
-	"github.com/rest-sh/restish/v2/internal/request"
-	"github.com/rest-sh/restish/v2/internal/secrets"
+	"github.com/saltbo/restish/v2/internal/hypermedia"
+	"github.com/saltbo/restish/v2/internal/request"
+	"github.com/saltbo/restish/v2/internal/secrets"
 	"go.yaml.in/yaml/v3"
 )
 

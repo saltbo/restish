@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rest-sh/restish/v2/internal/filter"
+	"github.com/saltbo/restish/v2/internal/filter"
 )
 
 // testDoc builds a representative normalised response map.

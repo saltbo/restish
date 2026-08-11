@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	internalplugin "github.com/rest-sh/restish/v2/internal/plugin"
+	internalplugin "github.com/saltbo/restish/v2/internal/plugin"
 )
 
 var systemCertPool = x509.SystemCertPool

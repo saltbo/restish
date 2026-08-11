@@ -9,8 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/rest-sh/restish/v2/config"
-	"github.com/rest-sh/restish/v2/internal/fileutil"
+	"github.com/saltbo/restish/v2/config"
+	"github.com/saltbo/restish/v2/internal/fileutil"
 	"github.com/tidwall/jsonc"
 )
 

@@ -8,7 +8,7 @@ import (
 
 	"github.com/alecthomas/chroma/v2/lexers"
 	"github.com/danielgtaylor/shorthand/v2"
-	"github.com/rest-sh/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/output"
 	"github.com/spf13/cobra"
 )
 

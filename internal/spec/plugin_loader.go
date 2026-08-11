@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/pb33f/libopenapi"
-	"github.com/rest-sh/restish/v2/internal/plugin"
-	pluginwire "github.com/rest-sh/restish/v2/plugin"
+	"github.com/saltbo/restish/v2/internal/plugin"
+	pluginwire "github.com/saltbo/restish/v2/plugin"
 )
 
 // PluginLoader is a spec.Loader backed by a hook plugin. The plugin receives a

@@ -10,11 +10,11 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/rest-sh/restish/v2/config"
-	authpkg "github.com/rest-sh/restish/v2/internal/auth"
-	"github.com/rest-sh/restish/v2/internal/hypermedia"
-	"github.com/rest-sh/restish/v2/internal/output"
-	"github.com/rest-sh/restish/v2/internal/request"
+	"github.com/saltbo/restish/v2/config"
+	authpkg "github.com/saltbo/restish/v2/internal/auth"
+	"github.com/saltbo/restish/v2/internal/hypermedia"
+	"github.com/saltbo/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/request"
 )
 
 type preparedRequest struct {

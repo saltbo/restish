@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rest-sh/restish/v2/config"
+	"github.com/saltbo/restish/v2/config"
 )
 
 func TestThemeSetFromURL(t *testing.T) {

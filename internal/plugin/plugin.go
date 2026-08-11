@@ -17,10 +17,10 @@ import (
 	"time"
 
 	"github.com/fxamacker/cbor/v2"
-	configpkg "github.com/rest-sh/restish/v2/config"
-	"github.com/rest-sh/restish/v2/internal/fileutil"
-	"github.com/rest-sh/restish/v2/internal/procutil"
-	pluginwire "github.com/rest-sh/restish/v2/plugin"
+	configpkg "github.com/saltbo/restish/v2/config"
+	"github.com/saltbo/restish/v2/internal/fileutil"
+	"github.com/saltbo/restish/v2/internal/procutil"
+	pluginwire "github.com/saltbo/restish/v2/plugin"
 )
 
 // CurrentPluginAPIVersion is the highest plugin protocol version this build of

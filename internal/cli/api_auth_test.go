@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rest-sh/restish/v2/auth"
-	"github.com/rest-sh/restish/v2/config"
+	"github.com/saltbo/restish/v2/auth"
+	"github.com/saltbo/restish/v2/config"
 )
 
 type noopAuthHandler struct{}

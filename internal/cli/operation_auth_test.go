@@ -7,12 +7,12 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/rest-sh/restish/v2/auth"
-	"github.com/rest-sh/restish/v2/config"
-	internalplugin "github.com/rest-sh/restish/v2/internal/plugin"
-	"github.com/rest-sh/restish/v2/internal/request"
-	"github.com/rest-sh/restish/v2/internal/spec"
-	pluginwire "github.com/rest-sh/restish/v2/plugin"
+	"github.com/saltbo/restish/v2/auth"
+	"github.com/saltbo/restish/v2/config"
+	internalplugin "github.com/saltbo/restish/v2/internal/plugin"
+	"github.com/saltbo/restish/v2/internal/request"
+	"github.com/saltbo/restish/v2/internal/spec"
+	pluginwire "github.com/saltbo/restish/v2/plugin"
 )
 
 type forceRecordingAuth struct {

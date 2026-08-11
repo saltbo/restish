@@ -17,7 +17,7 @@ import (
 	"github.com/hexops/gotextdiff"
 	"github.com/hexops/gotextdiff/myers"
 	"github.com/hexops/gotextdiff/span"
-	"github.com/rest-sh/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/output"
 	"github.com/spf13/cobra"
 	"go.yaml.in/yaml/v3"
 )

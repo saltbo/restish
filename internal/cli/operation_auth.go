@@ -7,11 +7,11 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/rest-sh/restish/v2/auth"
-	"github.com/rest-sh/restish/v2/config"
-	internalplugin "github.com/rest-sh/restish/v2/internal/plugin"
-	"github.com/rest-sh/restish/v2/internal/request"
-	"github.com/rest-sh/restish/v2/internal/spec"
+	"github.com/saltbo/restish/v2/auth"
+	"github.com/saltbo/restish/v2/config"
+	internalplugin "github.com/saltbo/restish/v2/internal/plugin"
+	"github.com/saltbo/restish/v2/internal/request"
+	"github.com/saltbo/restish/v2/internal/spec"
 )
 
 type operationAuthPolicy struct {

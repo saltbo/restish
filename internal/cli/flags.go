@@ -10,7 +10,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/rest-sh/restish/v2/internal/request"
+	"github.com/saltbo/restish/v2/internal/request"
 )
 
 // GlobalFlags holds the parsed value of every persistent rsh-* flag plus the

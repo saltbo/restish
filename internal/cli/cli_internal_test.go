@@ -12,7 +12,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/rest-sh/restish/v2/config"
+	"github.com/saltbo/restish/v2/config"
 )
 
 func TestExplicitConfigSidecarAndCachePaths(t *testing.T) {

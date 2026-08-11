@@ -1,6 +1,6 @@
 package main
 
-import pluginwire "github.com/rest-sh/restish/v2/plugin"
+import pluginwire "github.com/saltbo/restish/v2/plugin"
 
 type pluginClient struct {
 	*pluginwire.CommandClient

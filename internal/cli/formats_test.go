@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rest-sh/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/output"
 )
 
 func arrayServer(t *testing.T) *httptest.Server {

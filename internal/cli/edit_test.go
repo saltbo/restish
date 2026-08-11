@@ -14,7 +14,7 @@ import (
 	"sync/atomic"
 	"testing"
 
-	authpkg "github.com/rest-sh/restish/v2/auth"
+	authpkg "github.com/saltbo/restish/v2/auth"
 )
 
 func installFakeEditor(t *testing.T, replacement string) string {

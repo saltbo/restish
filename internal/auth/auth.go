@@ -1,6 +1,6 @@
 // Package auth is the restish CLI's internal auth-handler implementation.
 // External embedders should not import this package; see the public
-// github.com/rest-sh/restish/v2/auth package for the token cache API
+// github.com/saltbo/restish/v2/auth package for the token cache API
 // and the auth-handler interfaces.
 package auth
 
@@ -8,7 +8,7 @@ import (
 	"maps"
 	"net/http"
 
-	"github.com/rest-sh/restish/v2/auth"
+	"github.com/saltbo/restish/v2/auth"
 )
 
 func bearerAuth(req *http.Request, token string) {

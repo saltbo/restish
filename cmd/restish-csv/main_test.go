@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rest-sh/restish/v2/plugin"
+	"github.com/saltbo/restish/v2/plugin"
 )
 
 func TestFormatCSV(t *testing.T) {

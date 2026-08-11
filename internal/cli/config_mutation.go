@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/rest-sh/restish/v2/config"
-	internalconfig "github.com/rest-sh/restish/v2/internal/config"
-	"github.com/rest-sh/restish/v2/internal/request"
-	"github.com/rest-sh/restish/v2/internal/spec"
+	"github.com/saltbo/restish/v2/config"
+	internalconfig "github.com/saltbo/restish/v2/internal/config"
+	"github.com/saltbo/restish/v2/internal/request"
+	"github.com/saltbo/restish/v2/internal/spec"
 )
 
 func (c *CLI) requireAPI(apiName string) (*config.APIConfig, error) {

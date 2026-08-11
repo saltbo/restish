@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rest-sh/restish/v2/internal/procutil"
-	"github.com/rest-sh/restish/v2/internal/secrets"
-	pluginwire "github.com/rest-sh/restish/v2/plugin"
+	"github.com/saltbo/restish/v2/internal/procutil"
+	"github.com/saltbo/restish/v2/internal/secrets"
+	pluginwire "github.com/saltbo/restish/v2/plugin"
 )
 
 const (

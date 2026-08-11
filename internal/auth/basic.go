@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/rest-sh/restish/v2/auth"
+	"github.com/saltbo/restish/v2/auth"
 )
 
 // HTTPBasic implements HTTP Basic authentication (RFC 7617).

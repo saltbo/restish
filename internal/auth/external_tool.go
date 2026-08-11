@@ -5,13 +5,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/rest-sh/restish/v2/auth"
+	"github.com/saltbo/restish/v2/auth"
 	"io"
 	"net/http"
 	"strings"
 	"time"
 
-	"github.com/rest-sh/restish/v2/internal/procutil"
+	"github.com/saltbo/restish/v2/internal/procutil"
 )
 
 const (

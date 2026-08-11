@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/rest-sh/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/output"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )

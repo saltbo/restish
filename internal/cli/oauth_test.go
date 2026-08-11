@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rest-sh/restish/v2/auth"
+	"github.com/saltbo/restish/v2/auth"
 )
 
 func oauthTokenResponse(r *http.Request, accessToken string) *http.Response {

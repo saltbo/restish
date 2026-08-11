@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	openapiparam "github.com/rest-sh/restish/v2/internal/openapi"
+	openapiparam "github.com/saltbo/restish/v2/internal/openapi"
 )
 
 type HTTPRequest struct {

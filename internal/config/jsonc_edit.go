@@ -14,8 +14,8 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/shorthand/v2"
-	"github.com/rest-sh/restish/v2/config"
-	"github.com/rest-sh/restish/v2/internal/fileutil"
+	"github.com/saltbo/restish/v2/config"
+	"github.com/saltbo/restish/v2/internal/fileutil"
 	"github.com/tailscale/hujson"
 	"github.com/tidwall/jsonc"
 )

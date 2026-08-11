@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rest-sh/restish/v2/internal/content"
-	"github.com/rest-sh/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/content"
+	"github.com/saltbo/restish/v2/internal/output"
 )
 
 var testRegistry = content.Default()

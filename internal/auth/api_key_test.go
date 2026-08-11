@@ -2,7 +2,7 @@ package auth
 
 import (
 	"context"
-	"github.com/rest-sh/restish/v2/auth"
+	"github.com/saltbo/restish/v2/auth"
 	"net/http"
 	"strings"
 	"testing"

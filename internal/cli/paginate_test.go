@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rest-sh/restish/v2/internal/cli"
+	"github.com/saltbo/restish/v2/internal/cli"
 )
 
 type notifyWriter struct {

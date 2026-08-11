@@ -7,7 +7,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/rest-sh/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/output"
 )
 
 // renderTOON formats value through the public formatter and returns the string.

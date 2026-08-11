@@ -20,7 +20,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rest-sh/restish/v2/internal/plugin"
+	"github.com/saltbo/restish/v2/internal/plugin"
 	"github.com/spf13/cobra"
 )
 

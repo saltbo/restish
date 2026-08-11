@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rest-sh/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/output"
 )
 
 func TestColorEnabled_NOCOLOREnv(t *testing.T) {

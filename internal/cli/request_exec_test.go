@@ -9,10 +9,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rest-sh/restish/v2/auth"
-	"github.com/rest-sh/restish/v2/config"
-	"github.com/rest-sh/restish/v2/internal/hypermedia"
-	"github.com/rest-sh/restish/v2/internal/request"
+	"github.com/saltbo/restish/v2/auth"
+	"github.com/saltbo/restish/v2/config"
+	"github.com/saltbo/restish/v2/internal/hypermedia"
+	"github.com/saltbo/restish/v2/internal/request"
 )
 
 type testAuthHandler struct{}

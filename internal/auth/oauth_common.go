@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/rest-sh/restish/v2/auth"
+	"github.com/saltbo/restish/v2/auth"
 	"io"
 	"net"
 	"net/http"
@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rest-sh/restish/v2/internal/secrets"
+	"github.com/saltbo/restish/v2/internal/secrets"
 	"golang.org/x/net/idna"
 )
 

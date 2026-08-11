@@ -13,10 +13,10 @@ import (
 	"sort"
 	"strings"
 
-	pluginwire "github.com/rest-sh/restish/v2/plugin"
+	pluginwire "github.com/saltbo/restish/v2/plugin"
 
-	"github.com/rest-sh/restish/v2/internal/output"
-	"github.com/rest-sh/restish/v2/internal/plugin"
+	"github.com/saltbo/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/plugin"
 	"github.com/spf13/cobra"
 )
 

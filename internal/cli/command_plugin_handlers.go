@@ -8,10 +8,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/rest-sh/restish/v2/internal/filter"
-	"github.com/rest-sh/restish/v2/internal/output"
-	"github.com/rest-sh/restish/v2/internal/spec"
-	pluginwire "github.com/rest-sh/restish/v2/plugin"
+	"github.com/saltbo/restish/v2/internal/filter"
+	"github.com/saltbo/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/spec"
+	pluginwire "github.com/saltbo/restish/v2/plugin"
 	"github.com/spf13/cobra"
 )
 

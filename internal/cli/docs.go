@@ -4,8 +4,8 @@ import (
 	"context"
 	"path/filepath"
 
-	"github.com/rest-sh/restish/v2/config"
-	internalplugin "github.com/rest-sh/restish/v2/internal/plugin"
+	"github.com/saltbo/restish/v2/config"
+	internalplugin "github.com/saltbo/restish/v2/internal/plugin"
 	"github.com/spf13/cobra"
 )
 

@@ -12,8 +12,8 @@ import (
 	"time"
 
 	"github.com/alecthomas/chroma/v2/lexers"
-	"github.com/rest-sh/restish/v2/internal/output"
-	"github.com/rest-sh/restish/v2/internal/request"
+	"github.com/saltbo/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/request"
 	"github.com/spf13/cobra"
 )
 

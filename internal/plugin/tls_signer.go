@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	pluginwire "github.com/rest-sh/restish/v2/plugin"
+	pluginwire "github.com/saltbo/restish/v2/plugin"
 )
 
 const (

@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	publicauth "github.com/rest-sh/restish/v2/auth"
+	publicauth "github.com/saltbo/restish/v2/auth"
 )
 
 type dpopCredentialSourceStub struct {

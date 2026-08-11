@@ -12,7 +12,7 @@ import (
 	"github.com/alecthomas/chroma/v2"
 	"github.com/alecthomas/chroma/v2/formatters"
 	"github.com/alecthomas/chroma/v2/lexers"
-	"github.com/rest-sh/restish/v2/internal/content"
+	"github.com/saltbo/restish/v2/internal/content"
 	"golang.org/x/term"
 )
 

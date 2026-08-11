@@ -20,10 +20,10 @@ import (
 	"time"
 
 	"github.com/fxamacker/cbor/v2"
-	"github.com/rest-sh/restish/v2/auth"
-	"github.com/rest-sh/restish/v2/config"
-	"github.com/rest-sh/restish/v2/internal/cli"
-	"github.com/rest-sh/restish/v2/internal/spec"
+	"github.com/saltbo/restish/v2/auth"
+	"github.com/saltbo/restish/v2/config"
+	"github.com/saltbo/restish/v2/internal/cli"
+	"github.com/saltbo/restish/v2/internal/spec"
 )
 
 // specWithOperations returns an OpenAPI 3.1 spec JSON string.

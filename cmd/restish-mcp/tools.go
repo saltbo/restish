@@ -9,8 +9,8 @@ import (
 	"github.com/pb33f/libopenapi"
 	v3high "github.com/pb33f/libopenapi/datamodel/high/v3"
 
-	"github.com/rest-sh/restish/v2/internal/spec"
-	"github.com/rest-sh/restish/v2/plugin"
+	"github.com/saltbo/restish/v2/internal/spec"
+	"github.com/saltbo/restish/v2/plugin"
 )
 
 type APISpec struct {

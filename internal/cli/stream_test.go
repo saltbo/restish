@@ -15,7 +15,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rest-sh/restish/v2/internal/cli"
+	"github.com/saltbo/restish/v2/internal/cli"
 )
 
 // sseBody builds an SSE response body from the provided event data strings.

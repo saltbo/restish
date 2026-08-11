@@ -1,4 +1,4 @@
-module github.com/rest-sh/restish/v2
+module github.com/saltbo/restish/v2
 
 go 1.25.3
 

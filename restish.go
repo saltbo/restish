@@ -7,14 +7,14 @@
 package restish
 
 import (
-	"github.com/rest-sh/restish/v2/auth"
-	"github.com/rest-sh/restish/v2/config"
-	internal_auth "github.com/rest-sh/restish/v2/internal/auth"
-	internalcli "github.com/rest-sh/restish/v2/internal/cli"
-	"github.com/rest-sh/restish/v2/internal/content"
-	"github.com/rest-sh/restish/v2/internal/hypermedia"
-	"github.com/rest-sh/restish/v2/internal/output"
-	"github.com/rest-sh/restish/v2/internal/spec"
+	"github.com/saltbo/restish/v2/auth"
+	"github.com/saltbo/restish/v2/config"
+	internal_auth "github.com/saltbo/restish/v2/internal/auth"
+	internalcli "github.com/saltbo/restish/v2/internal/cli"
+	"github.com/saltbo/restish/v2/internal/content"
+	"github.com/saltbo/restish/v2/internal/hypermedia"
+	"github.com/saltbo/restish/v2/internal/output"
+	"github.com/saltbo/restish/v2/internal/spec"
 )
 
 // DPoPCredentialDescription describes the authorization server and Resource
@@ -106,7 +106,7 @@ func NewDPoPAuthHandler(source DPoPCredentialSource) AuthHandler {
 	return &internal_auth.DPoP{Source: source}
 }
 
-// Version is the current build version. Set github.com/rest-sh/restish/v2/internal/cli.Version
+// Version is the current build version. Set github.com/saltbo/restish/v2/internal/cli.Version
 // from a custom main package when branding or release metadata differs.
 func Version() string {
 	return internalcli.Version

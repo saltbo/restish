@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	publicconfig "github.com/rest-sh/restish/v2/config"
+	publicconfig "github.com/saltbo/restish/v2/config"
 	"github.com/tailscale/hujson"
 )
 

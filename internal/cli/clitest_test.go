@@ -11,8 +11,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rest-sh/restish/v2/config"
-	"github.com/rest-sh/restish/v2/internal/cli"
+	"github.com/saltbo/restish/v2/config"
+	"github.com/saltbo/restish/v2/internal/cli"
 )
 
 type testApp struct {
