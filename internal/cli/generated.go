@@ -654,6 +654,7 @@ func appendGeneratedScopeHelp(long string, op spec.Operation) string {
 	if len(alternatives) == 0 {
 		return long
 	}
+	long = strings.TrimRight(long, "\n")
 	if long != "" {
 		long += "\n\n"
 	}

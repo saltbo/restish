@@ -57,6 +57,9 @@ func TestProductSurfaceHidesInternalFlagsAndInspectsGeneratedScopes(t *testing.T
 			t.Fatalf("compact product help omitted %q:\n%s", expected, help)
 		}
 	}
+	if strings.Contains(help, "\n\n\nRequired scopes:") {
+		t.Fatalf("compact product help contains an empty section:\n%s", help)
+	}
 	app.Stdout.Reset()
 	app.Run("get", "--help")
 	help = app.Stdout.String()
