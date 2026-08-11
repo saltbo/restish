@@ -364,10 +364,10 @@ func TestCacheTTL_NoHeader(t *testing.T) {
 
 func TestCacheTTL_NoMaxAge(t *testing.T) {
 	resp := &http.Response{Header: http.Header{}}
-	resp.Header.Set("Cache-Control", "no-cache, no-store")
+	resp.Header.Set("Cache-Control", "no-cache")
 	ttl := cacheTTL(resp)
-	if ttl != 0 {
-		t.Errorf("expected 0, got %v", ttl)
+	if ttl != cacheTTLRevalidate {
+		t.Errorf("expected revalidation, got %v", ttl)
 	}
 }
 
@@ -375,8 +375,16 @@ func TestCacheTTL_NoStoreOverridesMaxAge(t *testing.T) {
 	resp := &http.Response{Header: http.Header{}}
 	resp.Header.Set("Cache-Control", "public, max-age=3600, no-store")
 	ttl := cacheTTL(resp)
-	if ttl != 0 {
-		t.Errorf("expected 0, got %v", ttl)
+	if ttl != cacheTTLNoStore {
+		t.Errorf("expected no-store, got %v", ttl)
+	}
+}
+
+func TestCacheTTL_MaxAgeZeroRequiresRevalidation(t *testing.T) {
+	resp := &http.Response{Header: http.Header{}}
+	resp.Header.Set("Cache-Control", "public, max-age=0, must-revalidate")
+	if ttl := cacheTTL(resp); ttl != cacheTTLRevalidate {
+		t.Errorf("expected revalidation, got %v", ttl)
 	}
 }
 
@@ -1963,6 +1971,52 @@ func TestDiscover_Cache(t *testing.T) {
 
 	if got := callCount.Load(); got != countAfterFirst {
 		t.Errorf("second Discover made %d additional network calls, expected 0", got-countAfterFirst)
+	}
+}
+
+func TestDiscoverRevalidatesExplicitlyStaleSpec(t *testing.T) {
+	var callCount atomic.Int64
+	tr := roundTripperFunc(func(*http.Request) (*http.Response, error) {
+		version := callCount.Add(1)
+		headers := http.Header{"Cache-Control": []string{"public, max-age=0, must-revalidate"}}
+		body := fmt.Sprintf(`{"openapi":"3.1.0","info":{"title":"Current","version":"%d"},"paths":{}}`, version)
+		return httpResponse(http.StatusOK, "application/json", body, headers), nil
+	})
+	cfg := DiscoverConfig{
+		APIName: "revalidated", BaseURL: "https://api.example.com", SpecURL: "https://api.example.com/openapi.json",
+		CacheDir: t.TempDir(), Version: "v2.0.0", Transport: tr,
+	}
+
+	first, err := Discover(context.Background(), cfg, DefaultLoaders())
+	if err != nil {
+		t.Fatal(err)
+	}
+	second, err := Discover(context.Background(), cfg, DefaultLoaders())
+	if err != nil {
+		t.Fatal(err)
+	}
+	firstInfo, _ := first.Info()
+	secondInfo, _ := second.Info()
+	if firstInfo.Version != "1" || secondInfo.Version != "2" || callCount.Load() != 2 {
+		t.Fatalf("versions = %q, %q; calls = %d", firstInfo.Version, secondInfo.Version, callCount.Load())
+	}
+}
+
+func TestDiscoverDoesNotStoreNoStoreSpec(t *testing.T) {
+	headers := http.Header{"Cache-Control": []string{"no-store"}}
+	tr := roundTripperFunc(func(*http.Request) (*http.Response, error) {
+		return httpResponse(http.StatusOK, "application/json", `{"openapi":"3.1.0","info":{"title":"Private","version":"1"},"paths":{}}`, headers), nil
+	})
+	cacheDir := t.TempDir()
+	_, err := Discover(context.Background(), DiscoverConfig{
+		APIName: "no-store", BaseURL: "https://api.example.com", SpecURL: "https://api.example.com/openapi.json",
+		CacheDir: cacheDir, Version: "v2.0.0", Transport: tr,
+	}, DefaultLoaders())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, ok := readCache(cacheDir, "no-store", "v2.0.0"); ok {
+		t.Fatal("no-store response was cached")
 	}
 }
 

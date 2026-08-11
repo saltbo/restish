@@ -30,6 +30,11 @@ const maxSpecBytes = 50 * 1024 * 1024
 const defaultDiscoverTimeout = 30 * time.Second
 const defaultExplicitSpecDiscoverTimeout = 2 * time.Minute
 
+const (
+	cacheTTLRevalidate = -1 * time.Nanosecond
+	cacheTTLNoStore    = -2 * time.Nanosecond
+)
+
 var ErrNoSpecFound = errors.New("no API spec found")
 
 var errNoSpecCandidate = errors.New("no spec at candidate URL")
@@ -170,8 +175,16 @@ loadFresh:
 
 	// Cache the result.
 	if cfg.CacheDir != "" && spec != nil {
+		if ttl == cacheTTLNoStore {
+			if err := InvalidateCache(cfg.CacheDir, cfg.APIName); err != nil {
+				return nil, err
+			}
+			return spec, nil
+		}
 		var expiresAt time.Time
-		if ttl > 0 {
+		if ttl == cacheTTLRevalidate {
+			expiresAt = time.Now()
+		} else if ttl > 0 {
 			expiresAt = time.Now().Add(ttl)
 		} else {
 			expiresAt = time.Now().Add(24 * time.Hour)
@@ -665,20 +678,32 @@ func effectiveFetcher(cfg DiscoverConfig) HTTPFetcher {
 // cacheTTL extracts the cache duration from a response's Cache-Control header.
 func cacheTTL(resp *http.Response) time.Duration {
 	cc := resp.Header.Get("Cache-Control")
+	noCache := false
 	for _, part := range strings.Split(cc, ",") {
 		part = strings.TrimSpace(part)
 		if strings.EqualFold(part, "no-store") {
-			return 0
+			return cacheTTLNoStore
 		}
+		if strings.EqualFold(part, "no-cache") {
+			noCache = true
+		}
+	}
+	if noCache {
+		return cacheTTLRevalidate
 	}
 	for _, directive := range []string{"s-maxage=", "max-age="} {
 		for _, part := range strings.Split(cc, ",") {
 			part = strings.TrimSpace(part)
 			if strings.HasPrefix(strings.ToLower(part), directive) {
-				if secs, err := strconv.Atoi(part[len(directive):]); err == nil && secs > 0 {
-					return time.Duration(secs) * time.Second
+				if secs, err := strconv.Atoi(part[len(directive):]); err == nil {
+					if secs > 0 {
+						return time.Duration(secs) * time.Second
+					}
+					if secs == 0 {
+						return cacheTTLRevalidate
+					}
 				}
-				return 0
+				return cacheTTLRevalidate
 			}
 		}
 	}
