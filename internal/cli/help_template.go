@@ -112,7 +112,7 @@ Flags:
 {{. | trimTrailingWhitespaces}}{{end}}{{end}}{{if .HasAvailableInheritedFlags}}{{with rshInheritedFlagUsages . .InheritedFlags}}
 
 Global Flags:
-{{. | trimTrailingWhitespaces}}{{end}}{{if not (rshShowAllInheritedFlags .)}}
+{{. | trimTrailingWhitespaces}}{{end}}{{if rshShowInternalFlagHint .}}
 
 Use "{{.CommandPath}} --help-all" to show every Restish global flag.{{end}}{{end}}{{if .HasHelpSubCommands}}
 
@@ -141,9 +141,18 @@ func setupGroupedUsage(root *cobra.Command) {
 		cobra.AddTemplateFunc("rshLocalFlagUsages", groupedLocalFlagUsages)
 		cobra.AddTemplateFunc("rshInheritedFlagUsages", groupedInheritedFlagUsages)
 		cobra.AddTemplateFunc("rshShowAllInheritedFlags", showAllInheritedFlags)
+		cobra.AddTemplateFunc("rshShowInternalFlagHint", showInternalFlagHint)
 		cobra.AddTemplateFunc("rshGroupHasAvailableCommands", groupHasAvailableCommands)
 	})
 	root.SetUsageTemplate(groupedUsageTemplate)
+}
+
+func showInternalFlagHint(cmd *cobra.Command) bool {
+	if cmd == nil || showAllInheritedFlags(cmd) {
+		return false
+	}
+	root := cmd.Root()
+	return root.Annotations == nil || root.Annotations[hideInternalFlagsAnnotation] != "true"
 }
 
 func groupHasAvailableCommands(commands []*cobra.Command, groupID string) bool {

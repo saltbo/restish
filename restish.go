@@ -91,6 +91,28 @@ type AuthContext = auth.AuthContext
 // CommandSurface controls the command tree exposed by embedded custom CLIs.
 type CommandSurface = internalcli.CommandSurface
 
+// APIInspection is the generated operation inventory for one configured API.
+type APIInspection = internalcli.APIInspection
+
+// OperationInspection describes one generated operation and its security.
+type OperationInspection = internalcli.OperationInspection
+
+// CredentialRequirementInspection is the product-relevant security metadata
+// returned by InspectAPI.
+type CredentialRequirementInspection = internalcli.CredentialRequirementInspection
+
+// CredentialRequirement is one OpenAPI security requirement.
+type CredentialRequirement = spec.CredentialRequirement
+
+// CredentialAlternative is one AND-set in OpenAPI's OR-list security model.
+type CredentialAlternative = spec.CredentialAlternative
+
+// ResponseMiddleware is trusted in-process normalized response middleware.
+type ResponseMiddleware = internalcli.ResponseMiddleware
+
+// ResponseMiddlewareResult replaces or suppresses a normalized response.
+type ResponseMiddlewareResult = internalcli.ResponseMiddlewareResult
+
 // New returns a CLI wired to the real OS stdin/stdout/stderr and the default
 // Restish registries. Customize it with SetCommandName,
 // SetCommandDescription, SetVersion, SetSignalHandling, SetDefaultConfig,

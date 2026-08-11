@@ -132,8 +132,18 @@ type CLI struct {
 	requestExecutionStarted bool
 	bodyPrefixHinted        bool
 	commandSurface          CommandSurface
+	responseMiddlewares     []ResponseMiddleware
 	runCtx                  context.Context
 	projectConfig           *projectConfigState
+}
+
+// AddResponseMiddleware registers trusted in-process response middleware.
+// Middleware runs after normalization and before pagination and rendering.
+func (c *CLI) AddResponseMiddleware(middleware ResponseMiddleware) {
+	if middleware == nil {
+		panic("restish: nil response middleware")
+	}
+	c.responseMiddlewares = append(c.responseMiddlewares, middleware)
 }
 
 // New returns a CLI wired to the real OS stdin/stdout/stderr.

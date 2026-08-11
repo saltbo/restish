@@ -168,7 +168,7 @@ func collectFlagNames(flags *pflag.FlagSet, seen map[string]struct{}, names *[]s
 		return
 	}
 	flags.VisitAll(func(flag *pflag.Flag) {
-		if flag == nil || flag.Name == "" {
+		if flag == nil || flag.Name == "" || flag.Hidden {
 			return
 		}
 		if _, ok := seen[flag.Name]; ok {

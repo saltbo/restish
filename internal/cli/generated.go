@@ -24,6 +24,7 @@ import (
 
 const (
 	generatedOperationAnnotation              = "restish.generated.operation"
+	generatedOperationIDAnnotation            = "restish.generated.operationID"
 	generatedOperationRequiredTypesAnnotation = "restish.generated.requiredTypes"
 	generatedAPIHelpShortAnnotation           = "restish.generated.api.helpShort"
 	generatedAPIHelpFullAnnotation            = "restish.generated.api.helpFull"
@@ -89,7 +90,7 @@ func (c *CLI) buildAPICommandFromOperationSet(apiName string, apiCfg *config.API
 		}
 		authHelp := fmt.Sprintf("Auth: run %q for credential coverage. Use --rsh-auth on generated operations when you need an explicit credential override.", c.commandNameOrDefault()+" api auth inspect "+apiName)
 		if c.hasCuratedCommandSurface() {
-			authHelp = "Auth: credentials and operation scopes are resolved by the embedding CLI."
+			authHelp = fmt.Sprintf("Auth: credentials and operation scopes are resolved by %s.", c.commandNameOrDefault())
 		}
 		long += authHelp
 		if fullLong != "" {
@@ -531,6 +532,7 @@ func (c *CLI) buildOperationCommand(apiName, examplePrefix string, op spec.Opera
 		cmd.Annotations = map[string]string{}
 	}
 	cmd.Annotations[generatedOperationAnnotation] = "true"
+	cmd.Annotations[generatedOperationIDAnnotation] = op.ID
 	if len(required) > 0 {
 		types := make([]string, 0, len(required))
 		for _, p := range required {

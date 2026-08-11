@@ -10,6 +10,7 @@ import (
 	"github.com/saltbo/restish/v2/config"
 	"github.com/saltbo/restish/v2/internal/spec"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 // CommandSurface controls the command tree exposed by embedded custom CLIs.
@@ -41,6 +42,11 @@ type CommandSurface struct {
 	// DisablePlugins prevents discovery and execution of external Restish
 	// subprocess plugins in a fully in-process embedded product.
 	DisablePlugins bool
+
+	// HideInternalFlags keeps Restish-owned global controls out of embedded
+	// product help. The flags remain parseable so the host can translate its
+	// own stable command surface to them internally.
+	HideInternalFlags bool
 }
 
 // SetCommandSurface changes the command tree exposed by an embedded CLI.
@@ -192,6 +198,9 @@ func (c *CLI) applyCommandSurface(root, promotedAPICmd *cobra.Command, scan cliA
 		if c.hasCuratedCommandSurface() {
 			c.applyCuratedCommandSurface(root, cfg)
 		}
+		if c.commandSurface.HideInternalFlags {
+			hideInternalCommandFlags(root)
+		}
 		return nil
 	}
 	if promotedAPICmd == nil && c.promotedAPICommandMetadataNeeded(scan) {
@@ -223,7 +232,28 @@ func (c *CLI) applyCommandSurface(root, promotedAPICmd *cobra.Command, scan cliA
 		root.AddCommand(cmd)
 	}
 	c.installPromotedRootFallback(root, cfg, originalArgs)
+	if c.commandSurface.HideInternalFlags {
+		hideInternalCommandFlags(root)
+	}
 	return nil
+}
+
+const hideInternalFlagsAnnotation = "restish.hideInternalFlags"
+
+func hideInternalCommandFlags(root *cobra.Command) {
+	if root.Annotations == nil {
+		root.Annotations = map[string]string{}
+	}
+	root.Annotations[hideInternalFlagsAnnotation] = "true"
+	for _, command := range commandTree(root) {
+		for _, flags := range []*pflag.FlagSet{command.LocalFlags(), command.PersistentFlags()} {
+			flags.VisitAll(func(flag *pflag.Flag) {
+				if strings.HasPrefix(flag.Name, "rsh-") || flag.Name == "help-all" {
+					flag.Hidden = true
+				}
+			})
+		}
+	}
 }
 
 func (c *CLI) applyCuratedCommandSurface(root *cobra.Command, cfg *config.Config) {
@@ -234,6 +264,9 @@ func (c *CLI) applyCuratedCommandSurface(root *cobra.Command, cfg *config.Config
 	}
 	for _, command := range root.Commands() {
 		keep := allowed[command.Name()]
+		if keep {
+			c.brandCuratedHTTPCommand(command)
+		}
 		if !keep && c.commandSurface.RegisteredAPIs && cfg.APIs[command.Name()] != nil {
 			keep = true
 		}
@@ -241,6 +274,13 @@ func (c *CLI) applyCuratedCommandSurface(root *cobra.Command, cfg *config.Config
 			root.RemoveCommand(command)
 		}
 	}
+}
+
+func (c *CLI) brandCuratedHTTPCommand(command *cobra.Command) {
+	command.Long = fmt.Sprintf(
+		"Perform an HTTP `%s` request against a full URL or registered Resource Server URL.\n\n%s applies configured profiles, authentication, response formatting, filtering, retries, caching, and pagination.",
+		strings.ToUpper(command.Name()), c.commandNameOrDefault(),
+	)
 }
 
 func (c *CLI) promotedSupportCommands(root *cobra.Command, apiName string) map[string]*cobra.Command {

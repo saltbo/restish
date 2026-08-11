@@ -410,6 +410,13 @@ func (c *CLI) runHTTPWithOptions(cmd *cobra.Command, method string, args []strin
 				bodyOverride:    followReq.Body,
 			})
 		}
+		resp, drop, mwErr = c.runResponseMiddlewares(requestContext(cmd), httpResp.Request, resp)
+		if mwErr != nil {
+			return mwErr
+		}
+		if drop {
+			return nil
+		}
 	}
 
 	// Pagination: if this is a GET and there's a next link, paginate.
