@@ -49,6 +49,13 @@ remain parseable so a host can translate product flags without adding a second
 request/output implementation. Restish-specific prose is also omitted from the
 curated help surface.
 
+`CommandSurface.CompactOperationHelp` lets a product keep ordinary generated
+operation help bounded. The help retains the operation summary, required
+argument descriptions, ordinary operation flags, and OAuth scope alternatives,
+but omits the full OpenAPI description, credential scheme names, schemas,
+examples, and response models. This is an opt-in product surface; stock Restish
+continues to render complete operation reference material.
+
 `InspectAPI(ctx, api, profile)` returns only operations exposed by the API's
 configured exclusion and hidden-operation policy. Each item includes its exact
 generated command path, operation ID, method, path, summary, and OpenAPI
@@ -82,6 +89,11 @@ type OperationInspection struct {
     NoAuth                 bool
     OptionalAuth           bool
     CredentialAlternatives [][]CredentialRequirementInspection
+}
+
+type CommandSurface struct {
+    // Existing fields omitted.
+    CompactOperationHelp bool
 }
 
 func (c *CLI) InspectAPI(ctx context.Context, apiName, profileName string) (APIInspection, error)
@@ -125,6 +137,8 @@ unchanged. The additions are source-compatible public Go APIs.
 
 - CLI behavior tests prove hidden engine flags never appear in root, API, or
   operation help while remaining internally parseable.
+- Compact-help tests prove the product surface retains scope and argument
+  discovery without exposing credential scheme names or large schema material.
 - Inspection tests compare returned command paths and security scopes with the
   generated command tree for root and tag layouts, exclusions, and hidden
   operations.

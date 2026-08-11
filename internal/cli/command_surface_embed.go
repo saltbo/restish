@@ -47,6 +47,12 @@ type CommandSurface struct {
 	// product help. The flags remain parseable so the host can translate its
 	// own stable command surface to them internally.
 	HideInternalFlags bool
+
+	// CompactOperationHelp limits generated operation help to the operation
+	// summary, required arguments, and OAuth scopes. OpenAPI descriptions,
+	// schemas, examples, response models, and credential implementation names
+	// remain available to stock Restish without leaking into embedded products.
+	CompactOperationHelp bool
 }
 
 // SetCommandSurface changes the command tree exposed by an embedded CLI.

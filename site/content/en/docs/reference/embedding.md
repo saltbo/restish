@@ -190,6 +190,21 @@ Global Restish flags (`--rsh-profile`, `--rsh-output-format`, ...) remain
 available. The promoted API must be configured and its spec loadable when
 generated commands are needed. For a reliable first run, configure `SpecURL`.
 
+For a curated product that provides its own discovery UI, keep ordinary
+generated-operation help small:
+
+```go
+cli.SetCommandSurface(restish.CommandSurface{
+    PromotedAPI:          "api",
+    CompactOperationHelp: true,
+})
+```
+
+Compact help includes the operation summary, required arguments, operation
+flags, and OAuth scopes. It omits the full OpenAPI description, credential
+scheme names, schemas, examples, and response models. The default remains the
+complete Restish operation reference.
+
 ## Related Pages
 
 - [API Setup and Discovery](/docs/guides/api-setup-and-discovery/)

@@ -25,7 +25,7 @@ func TestProductSurfaceHidesInternalFlagsAndInspectsGeneratedScopes(t *testing.T
 		"agent-wallet": {BaseURL: "https://wallet.example", SpecFiles: []string{specPath}, CommandLayout: "tags"},
 	}})
 	app.CLI.SetCommandName("realmroot toolbox")
-	app.CLI.SetCommandSurface(cli.CommandSurface{HTTPMethods: []string{"get"}, RegisteredAPIs: true, IgnoreUserConfig: true, DisablePlugins: true, HideInternalFlags: true})
+	app.CLI.SetCommandSurface(cli.CommandSurface{HTTPMethods: []string{"get"}, RegisteredAPIs: true, IgnoreUserConfig: true, DisablePlugins: true, HideInternalFlags: true, CompactOperationHelp: true})
 
 	inspection, err := app.CLI.InspectAPI(context.Background(), "agent-wallet", "default")
 	if err != nil {
@@ -46,6 +46,16 @@ func TestProductSurfaceHidesInternalFlagsAndInspectsGeneratedScopes(t *testing.T
 	help := app.Stdout.String()
 	if strings.Contains(help, "Restish") || strings.Contains(help, "--rsh-") || strings.Contains(help, "--help-all") {
 		t.Fatalf("internal engine leaked into help:\n%s", help)
+	}
+	for _, hidden := range []string{"AgentOAuth", "oauth2", "Response 200", "Argument Schema"} {
+		if strings.Contains(help, hidden) {
+			t.Fatalf("compact product help exposed %q:\n%s", hidden, help)
+		}
+	}
+	for _, expected := range []string{"Show wallet", "Required scopes: wallet:read"} {
+		if !strings.Contains(help, expected) {
+			t.Fatalf("compact product help omitted %q:\n%s", expected, help)
+		}
 	}
 	app.Stdout.Reset()
 	app.Run("get", "--help")

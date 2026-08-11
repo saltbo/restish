@@ -487,6 +487,9 @@ func (c *CLI) buildOperationCommand(apiName, examplePrefix string, op spec.Opera
 	if op.XCLI.Description != "" {
 		long = op.XCLI.Description
 	}
+	if c.commandSurface.CompactOperationHelp {
+		long = short
+	}
 	if len(required) > 0 {
 		var argDocs strings.Builder
 		if long != "" {
@@ -498,8 +501,12 @@ func (c *CLI) buildOperationCommand(apiName, examplePrefix string, op spec.Opera
 		}
 		long += argDocs.String()
 	}
-	long = appendGeneratedAuthorizationHelp(long, op)
-	long = appendGeneratedOperationHelp(long, required, optional, op.Help)
+	if c.commandSurface.CompactOperationHelp {
+		long = appendGeneratedScopeHelp(long, op)
+	} else {
+		long = appendGeneratedAuthorizationHelp(long, op)
+		long = appendGeneratedOperationHelp(long, required, optional, op.Help)
+	}
 
 	cmd := &cobra.Command{
 		Use:        use,
@@ -616,6 +623,41 @@ func appendGeneratedAuthorizationHelp(long string, op spec.Operation) string {
 		help.WriteString(prefix + strings.Join(parts, " + ") + "\n")
 	}
 	return strings.TrimRight(help.String(), "\n")
+}
+
+func appendGeneratedScopeHelp(long string, op spec.Operation) string {
+	if op.NoAuth || len(op.CredentialAlternatives) == 0 {
+		return long
+	}
+	alternatives := make([]string, 0, len(op.CredentialAlternatives))
+	seen := make(map[string]bool)
+	for _, alternative := range op.CredentialAlternatives {
+		scopes := make([]string, 0)
+		seenScopes := make(map[string]bool)
+		for _, requirement := range alternative {
+			for _, scope := range requirement.Needs {
+				if scope != "" && !seenScopes[scope] {
+					scopes = append(scopes, scope)
+					seenScopes[scope] = true
+				}
+			}
+		}
+		if len(scopes) == 0 {
+			continue
+		}
+		expression := strings.Join(scopes, " + ")
+		if !seen[expression] {
+			seen[expression] = true
+			alternatives = append(alternatives, expression)
+		}
+	}
+	if len(alternatives) == 0 {
+		return long
+	}
+	if long != "" {
+		long += "\n\n"
+	}
+	return long + "Required scopes: " + strings.Join(alternatives, " OR ")
 }
 
 func generatedParamSatisfiedByAPIKeySecurity(p *paramInfo, alternatives []spec.CredentialAlternative) bool {
