@@ -447,7 +447,7 @@ func (c *CLI) buildOperationCommand(apiName, examplePrefix string, op spec.Opera
 		if generatedParamSatisfiedByAPIKeySecurity(pi, op.CredentialAlternatives) {
 			continue
 		}
-		if p.Required {
+		if p.Required && !pi.hasDefault {
 			required = append(required, pi)
 			continue
 		}
@@ -1511,12 +1511,22 @@ func (c *CLI) runGeneratedOp(
 	contentChildren := map[*paramInfo]map[string]any{}
 	var contentChildParents []*paramInfo
 	for _, p := range optional {
-		if !cmd.Flags().Changed(p.flagName) {
+		changed := cmd.Flags().Changed(p.flagName)
+		if !changed && !(p.required && p.hasDefault) {
 			continue
 		}
-		values, err := generatedFlagValues(cmd, p)
-		if err != nil {
-			return err
+		var values []string
+		if !changed {
+			values = append([]string(nil), p.defaultValues...)
+			if p.typ != "array" {
+				values = []string{p.defaultValue}
+			}
+		} else {
+			var err error
+			values, err = generatedFlagValues(cmd, p)
+			if err != nil {
+				return err
+			}
 		}
 		if err := validateGeneratedParamValues(p, values, "--"+p.flagName); err != nil {
 			return err
@@ -1533,9 +1543,10 @@ func (c *CLI) runGeneratedOp(
 			contentChildren[p.parent][p.objectKey] = value
 			continue
 		}
-		path, query, extraHeaders, err = addGeneratedParam(path, query, extraHeaders, p, values)
-		if err != nil {
-			return err
+		var errAdd error
+		path, query, extraHeaders, errAdd = addGeneratedParam(path, query, extraHeaders, p, values)
+		if errAdd != nil {
+			return errAdd
 		}
 	}
 	for _, parent := range contentChildParents {

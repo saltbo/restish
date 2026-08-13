@@ -3243,6 +3243,44 @@ func TestGeneratedCommandOptionalDefaultsSentOnlyWhenChanged(t *testing.T) {
 	}
 }
 
+func TestGeneratedCommandRequiredHeaderUsesItsSchemaDefault(t *testing.T) {
+	var versions []string
+	mux := http.NewServeMux()
+	mux.HandleFunc("/mailbox", func(w http.ResponseWriter, r *http.Request) {
+		versions = append(versions, r.Header.Get("API-Version"))
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprint(w, `{}`)
+	})
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(200) })
+
+	env := setupEnvWithSpec(t, mux, func(baseURL string) string {
+		return fmt.Sprintf(`{
+  "openapi": "3.1.0",
+  "info": {"title": "Inbox API", "version": "2026-08-11"},
+  "servers": [{"url": %q}],
+  "paths": {
+    "/mailbox": {
+      "get": {
+        "operationId": "getMailbox",
+        "parameters": [
+          {"name": "API-Version", "in": "header", "required": true, "schema": {"type": "string", "const": "2026-08-11", "default": "2026-08-11"}}
+        ],
+        "responses": {"200": {"description": "OK"}}
+      }
+    }
+  }
+}`, baseURL)
+	})
+
+	c := env.newCLI()
+	if err := c.Run([]string{"restish", "tapi", "get-mailbox"}); err != nil {
+		t.Fatalf("get-mailbox failed: %v", err)
+	}
+	if len(versions) != 1 || versions[0] != "2026-08-11" {
+		t.Fatalf("API-Version headers = %#v", versions)
+	}
+}
+
 func TestGeneratedCommandAnyOfQueryParamUsesStringFlag(t *testing.T) {
 	var gotQuery string
 	mux := http.NewServeMux()
