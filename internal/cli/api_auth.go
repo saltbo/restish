@@ -1232,7 +1232,7 @@ func mergeStringSet(existing, values []string) []string {
 
 func authRequirementKindSupported(kind string) bool {
 	switch kind {
-	case "api-key", "http-basic", "http-bearer", "http-dpop", "oauth2", "oauth2-dpop", "mtls":
+	case "api-key", "http-basic", "http-bearer", "http-dpop", "oauth2", "openid", "mtls":
 		return true
 	default:
 		return false

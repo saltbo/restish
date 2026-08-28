@@ -498,6 +498,60 @@ paths:
 	}})
 }
 
+func TestOperationsPreservesStandardOAuthKindsWhenDPoPRequired(t *testing.T) {
+	raw := `openapi: "3.1.0"
+info:
+  title: Test
+  version: "1.0.0"
+components:
+  securitySchemes:
+    OAuth:
+      type: oauth2
+      x-dpop-required: true
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.example.com/token
+          scopes:
+            items:read: Read items
+    OIDC:
+      type: openIdConnect
+      openIdConnectUrl: https://auth.example.com/.well-known/openid-configuration
+      x-dpop-required: true
+paths:
+  /oauth-items:
+    get:
+      operationId: listOAuthItems
+      security:
+        - OAuth: [items:read]
+      responses:
+        "200":
+          description: OK
+  /oidc-items:
+    get:
+      operationId: listOIDCItems
+      security:
+        - OIDC: [items:read]
+      responses:
+        "200":
+          description: OK`
+	loaded, err := load("application/yaml", []byte(raw), DefaultLoaders())
+	if err != nil {
+		t.Fatalf("load: %v", err)
+	}
+
+	ops, err := loaded.Operations(OperationOptions{BaseURL: "https://api.example.com"})
+	if err != nil {
+		t.Fatalf("operations: %v", err)
+	}
+
+	requireCredential(t, operationByID(t, ops, "listOAuthItems"), [][]CredentialRequirement{{
+		{ID: "OAuth", Ref: "#/components/securitySchemes/OAuth", Kind: "oauth2", Needs: []string{"items:read"}, Source: "openapi"},
+	}})
+	requireCredential(t, operationByID(t, ops, "listOIDCItems"), [][]CredentialRequirement{{
+		{ID: "OIDC", Ref: "#/components/securitySchemes/OIDC", Kind: "openid", Needs: []string{"items:read"}, Source: "openapi"},
+	}})
+}
+
 func TestOperationsUsesConfiguredServerVariables(t *testing.T) {
 	raw := `openapi: "3.1.0"
 info:
