@@ -320,13 +320,11 @@ func profileFallbackObviouslyMatches(requirement spec.CredentialRequirement, ac 
 		}
 	case "http-dpop":
 		return ac.Type == "dpop"
-	case "oauth2-dpop":
-		return ac.Type == "dpop"
 	case "http-basic":
 		return ac.Type == "http-basic"
 	case "api-key":
 		return ac.Type == "api-key"
-	case "oauth2":
+	case "oauth2", "openid":
 		return strings.HasPrefix(ac.Type, "oauth-") || ac.Type == "dpop"
 	}
 	return false

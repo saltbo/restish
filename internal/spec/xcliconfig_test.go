@@ -212,6 +212,39 @@ components:
 	}
 }
 
+func TestSchemeToXCLIAuth_DPoPRequiredOAuthUsesDPoPRuntime(t *testing.T) {
+	raw := `
+openapi: "3.1.0"
+info:
+  title: Test
+  version: "1.0.0"
+paths: {}
+components:
+  securitySchemes:
+    oauth:
+      type: oauth2
+      x-dpop-required: true
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.example.com/token
+          scopes: {}
+    oidc:
+      type: openIdConnect
+      openIdConnectUrl: https://auth.example.com/.well-known/openid-configuration
+      x-dpop-required: true`
+	doc := loadDoc(t, raw)
+	model, err := doc.V3Model()
+	if err != nil || model == nil {
+		t.Fatalf("BuildV3Model: %v", err)
+	}
+	for _, name := range []string{"oauth", "oidc"} {
+		auth := SchemeToXCLIAuth(model.Model.Components.SecuritySchemes.GetOrZero(name), nil)
+		if auth == nil || auth.Type != "dpop" {
+			t.Errorf("%s auth = %#v, want dpop", name, auth)
+		}
+	}
+}
+
 func TestSchemeToXCLIAuth_OAuth2AuthCode(t *testing.T) {
 	raw := `
 openapi: "3.1.0"

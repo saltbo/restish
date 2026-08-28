@@ -63,8 +63,8 @@ func TestPlanOperationAuthUsesDeclaredCoverageForDynamicDPoPCredential(t *testin
 		},
 	}}
 	policy := &operationAuthPolicy{CredentialAlternatives: []spec.CredentialAlternative{
-		{{ID: "ResourceOAuth", Kind: "oauth2-dpop", Needs: []string{"items:write"}}},
-		{{ID: "ResourceOAuth", Kind: "oauth2-dpop", Needs: []string{"items:read"}}},
+		{{ID: "ResourceOAuth", Kind: "oauth2", Needs: []string{"items:write"}}},
+		{{ID: "ResourceOAuth", Kind: "oauth2", Needs: []string{"items:read"}}},
 	}}
 
 	selected, handled, err := c.planOperationAuth("svc", "default", prof, policy)
@@ -84,7 +84,7 @@ func TestPlanOperationAuthLeavesUnscopedDynamicDPoPCredentialToItsResolver(t *te
 		}}},
 	}}
 	policy := &operationAuthPolicy{CredentialAlternatives: []spec.CredentialAlternative{{{
-		ID: "ResourceOAuth", Kind: "oauth2-dpop", Needs: []string{"items:read"},
+		ID: "ResourceOAuth", Kind: "oauth2", Needs: []string{"items:read"},
 	}}}}
 
 	selected, handled, err := c.planOperationAuth("svc", "default", prof, policy)
@@ -523,10 +523,10 @@ func TestOperationAuthCoverageDefersConfiguredDPoPSourcePerRequest(t *testing.T)
 	}}
 	ops := []spec.Operation{
 		{ID: "readWallet", CredentialAlternatives: []spec.CredentialAlternative{{{
-			ID: "RealmrootOAuth", Kind: "oauth2-dpop", Needs: []string{"wallet:read"},
+			ID: "RealmrootOAuth", Kind: "oauth2", Needs: []string{"wallet:read"},
 		}}}},
 		{ID: "pay", CredentialAlternatives: []spec.CredentialAlternative{{{
-			ID: "RealmrootOAuth", Kind: "oauth2-dpop", Needs: []string{"wallet:x402:pay"},
+			ID: "RealmrootOAuth", Kind: "openid", Needs: []string{"wallet:x402:pay"},
 		}}}},
 	}
 
