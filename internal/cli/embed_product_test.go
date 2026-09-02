@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -12,6 +13,108 @@ import (
 	"github.com/saltbo/restish/v2/config"
 	"github.com/saltbo/restish/v2/internal/cli"
 )
+
+func TestAutomaticIdempotencyForGeneratedCommand(t *testing.T) {
+	app := newTestApp(t)
+	specPath := filepath.Join(t.TempDir(), "openapi.json")
+	writeTestFile(t, specPath, automaticIdempotencySpec)
+	app.CLI.SetDefaultConfig(&config.Config{APIs: map[string]*config.APIConfig{
+		"svc": {BaseURL: "https://api.example.com", SpecFiles: []string{specPath}},
+	}})
+	app.CLI.SetCommandSurface(cli.CommandSurface{RegisteredAPIs: true, IgnoreUserConfig: true, AutomaticIdempotencyKeys: true})
+	app.CLI.Hooks().RetryBaseDelay = 0
+
+	var keys []string
+	app.UseTransport(func(request *http.Request) (*http.Response, error) {
+		keys = append(keys, request.Header.Get("Idempotency-Key"))
+		status := http.StatusCreated
+		if len(keys) == 1 {
+			status = http.StatusServiceUnavailable
+		}
+		return jsonResponse(status, `{}`), nil
+	})
+
+	app.Run("svc", "create-item")
+	if len(keys) != 2 {
+		t.Fatalf("request attempts = %d, want POST retry after 503", len(keys))
+	}
+	if !regexp.MustCompile(`^"[0-9a-f]{32}"$`).MatchString(keys[0]) {
+		t.Fatalf("generated Idempotency-Key = %q, want RFC 8941 quoted 128-bit hex string", keys[0])
+	}
+	if keys[1] != keys[0] {
+		t.Fatalf("retry Idempotency-Key = %q, want original %q", keys[1], keys[0])
+	}
+
+	const explicit = `"caller-selected-key"`
+	app.Run("svc", "create-item", "--idempotency-key", explicit)
+	if got := keys[len(keys)-1]; got != explicit {
+		t.Fatalf("explicit Idempotency-Key = %q, want unchanged %q", got, explicit)
+	}
+}
+
+func TestInspectAPIRequiresIdempotencyKeyOnlyForRequiredHeader(t *testing.T) {
+	app := newTestApp(t)
+	specPath := filepath.Join(t.TempDir(), "openapi.json")
+	writeTestFile(t, specPath, automaticIdempotencySpec)
+	app.CLI.SetDefaultConfig(&config.Config{APIs: map[string]*config.APIConfig{
+		"svc": {BaseURL: "https://api.example.com", SpecFiles: []string{specPath}},
+	}})
+	app.CLI.SetCommandSurface(cli.CommandSurface{RegisteredAPIs: true, IgnoreUserConfig: true, AutomaticIdempotencyKeys: true})
+
+	inspection, err := app.CLI.InspectAPI(context.Background(), "svc", "default")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := map[string]bool{"createItem": true, "createOptionalItem": false, "createOtherHeaderItem": false}
+	if len(inspection.Operations) != len(want) {
+		t.Fatalf("operations = %#v", inspection.Operations)
+	}
+	for _, operation := range inspection.Operations {
+		if operation.RequiresIdempotencyKey != want[operation.ID] {
+			t.Errorf("%s RequiresIdempotencyKey = %t, want %t", operation.ID, operation.RequiresIdempotencyKey, want[operation.ID])
+		}
+	}
+}
+
+const automaticIdempotencySpec = `{
+  "openapi":"3.1.0",
+  "info":{"title":"Idempotent API","version":"1"},
+  "paths":{
+    "/items":{"post":{"operationId":"createItem","parameters":[{"name":"Idempotency-Key","in":"header","required":true,"schema":{"type":"string"}}],"responses":{"201":{"description":"created"},"503":{"description":"unavailable"}}}},
+    "/optional-items":{"post":{"operationId":"createOptionalItem","parameters":[{"name":"idempotency-key","in":"header","required":false,"schema":{"type":"string"}}],"responses":{"201":{"description":"created"}}}},
+    "/other-header-items":{"post":{"operationId":"createOtherHeaderItem","parameters":[{"name":"Request-Key","in":"header","required":true,"schema":{"type":"string"}}],"responses":{"201":{"description":"created"}}}}
+  }
+}`
+
+func TestAutomaticIdempotencyZeroValuePreservesRequiredHeaderArgument(t *testing.T) {
+	app := newTestApp(t)
+	specPath := filepath.Join(t.TempDir(), "openapi.json")
+	writeTestFile(t, specPath, automaticIdempotencySpec)
+	app.CLI.SetDefaultConfig(&config.Config{APIs: map[string]*config.APIConfig{
+		"svc": {BaseURL: "https://api.example.com", SpecFiles: []string{specPath}},
+	}})
+	app.CLI.SetCommandSurface(cli.CommandSurface{RegisteredAPIs: true, IgnoreUserConfig: true})
+	var requests int
+	app.UseTransport(func(request *http.Request) (*http.Response, error) {
+		requests++
+		if got := request.Header.Get("Idempotency-Key"); got != `"caller-key"` {
+			t.Fatalf("Idempotency-Key = %q, want positional value", got)
+		}
+		return jsonResponse(http.StatusCreated, `{}`), nil
+	})
+
+	err := app.RunErr("svc", "create-item")
+	if err == nil || !strings.Contains(err.Error(), "missing required argument(s): idempotency-key") {
+		t.Fatalf("missing positional Idempotency-Key error = %v", err)
+	}
+	if requests != 0 {
+		t.Fatalf("missing positional header sent %d requests", requests)
+	}
+	app.Run("svc", "create-item", `"caller-key"`)
+	if requests != 1 {
+		t.Fatalf("positional header sent %d requests, want 1", requests)
+	}
+}
 
 func TestProductSurfaceHidesInternalFlagsAndInspectsGeneratedScopes(t *testing.T) {
 	app := newTestApp(t)

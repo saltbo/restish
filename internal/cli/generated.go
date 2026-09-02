@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"mime"
@@ -359,6 +361,8 @@ type paramInfo struct {
 	objectProperties []spec.ParamObjectProperty
 	parent           *paramInfo
 	objectKey        string
+
+	automaticIdempotencyKey bool
 }
 
 // buildOperationCommand creates a Cobra command for one OpenAPI operation.
@@ -418,6 +422,8 @@ func (c *CLI) buildOperationCommand(apiName, examplePrefix string, op spec.Opera
 			contentMediaType: p.ContentMediaType,
 			enum:             p.Enum,
 			objectProperties: p.ObjectProperties,
+
+			automaticIdempotencyKey: c.commandSurface.AutomaticIdempotencyKeys && isRequiredIdempotencyKeyParam(p),
 		}
 	}
 
@@ -445,6 +451,11 @@ func (c *CLI) buildOperationCommand(apiName, examplePrefix string, op spec.Opera
 			continue
 		}
 		if generatedParamSatisfiedByAPIKeySecurity(pi, op.CredentialAlternatives) {
+			continue
+		}
+		if pi.automaticIdempotencyKey {
+			pi.flagName = "idempotency-key"
+			optional = append(optional, pi)
 			continue
 		}
 		if p.Required && !pi.hasDefault {
@@ -1512,11 +1523,17 @@ func (c *CLI) runGeneratedOp(
 	var contentChildParents []*paramInfo
 	for _, p := range optional {
 		changed := cmd.Flags().Changed(p.flagName)
-		if !changed && !(p.required && p.hasDefault) {
+		if !changed && !p.automaticIdempotencyKey && !(p.required && p.hasDefault) {
 			continue
 		}
 		var values []string
-		if !changed {
+		if p.automaticIdempotencyKey && !changed {
+			value, err := NewIdempotencyKey()
+			if err != nil {
+				return err
+			}
+			values = []string{value}
+		} else if !changed {
 			values = append([]string(nil), p.defaultValues...)
 			if p.typ != "array" {
 				values = []string{p.defaultValue}
@@ -1618,6 +1635,7 @@ func (c *CLI) runGeneratedOp(
 		validationRequested:       validateBody,
 		bodyRequired:              bodyRequired,
 		rawBinaryBody:             rawBinaryBody,
+		idempotencyProtected:      generatedParamsUseAutomaticIdempotency(optional),
 		explicitAPIName:           apiName,
 		operationAuth: &operationAuthPolicy{
 			OptionalAuth:           optionalAuth,
@@ -1626,6 +1644,29 @@ func (c *CLI) runGeneratedOp(
 			Override:               gf.Auth,
 		},
 	})
+}
+
+func isRequiredIdempotencyKeyParam(param spec.Param) bool {
+	return param.Required && strings.EqualFold(param.In, "header") && strings.EqualFold(param.Name, "Idempotency-Key")
+}
+
+func generatedParamsUseAutomaticIdempotency(params []*paramInfo) bool {
+	for _, param := range params {
+		if param.automaticIdempotencyKey {
+			return true
+		}
+	}
+	return false
+}
+
+// NewIdempotencyKey returns a cryptographically random RFC 8941 string value
+// suitable for an Idempotency-Key request header.
+func NewIdempotencyKey() (string, error) {
+	var random [16]byte
+	if _, err := rand.Read(random[:]); err != nil {
+		return "", fmt.Errorf("generate idempotency key: %w", err)
+	}
+	return `"` + hex.EncodeToString(random[:]) + `"`, nil
 }
 
 func generatedFlagValues(cmd *cobra.Command, p *paramInfo) ([]string, error) {

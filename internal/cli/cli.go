@@ -555,12 +555,33 @@ func (c *CLI) baseHTTPTransport() http.RoundTripper {
 	return http.DefaultTransport
 }
 
+// RunOptions carries trusted per-invocation facts supplied by an embedding
+// product. These options are intentionally unavailable through command-line
+// arguments.
+type RunOptions struct {
+	IdempotencyProtected bool
+}
+
+type runOptionsContextKey struct{}
+
+func runOptionsFromContext(ctx context.Context) RunOptions {
+	options, _ := ctx.Value(runOptionsContextKey{}).(RunOptions)
+	return options
+}
+
 // Run executes the CLI with the provided arguments (pass os.Args from main).
 func (c *CLI) Run(args []string) error {
+	return c.RunWithOptions(args, RunOptions{})
+}
+
+// RunWithOptions executes the CLI with trusted per-invocation facts supplied
+// by an embedding product.
+func (c *CLI) RunWithOptions(args []string, options RunOptions) error {
 	// Build the root context once so requests, discovery, plugins, and
 	// formatters all share the same cancellation source.
 	ctx, cancel := c.rootContext()
 	defer cancel()
+	ctx = context.WithValue(ctx, runOptionsContextKey{}, options)
 	c.runCtx = ctx
 	defer func() { c.runCtx = nil }()
 

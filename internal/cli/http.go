@@ -162,6 +162,7 @@ type requestBodyOptions struct {
 	rawBinaryBody             bool
 	bodyOverrideSet           bool
 	bodyOverride              any
+	idempotencyProtected      bool
 }
 
 // runHTTPWithOptions executes one HTTP request through the full pipeline:
@@ -178,6 +179,7 @@ type requestBodyOptions struct {
 // response-middleware plugin.
 func (c *CLI) runHTTPWithOptions(cmd *cobra.Command, method string, args []string, followMode bool, extraHeaders []string, noAuth bool, firstPartyHost string, contentTypeOverride string, bodyOpts requestBodyOptions) error {
 	gf := globalFlagsFromContext(requestContext(cmd))
+	idempotencyProtected := bodyOpts.idempotencyProtected || runOptionsFromContext(requestContext(cmd)).IdempotencyProtected
 	if err := c.validateHTTPOutputFlags(cmd, gf); err != nil {
 		return err
 	}
@@ -189,6 +191,9 @@ func (c *CLI) runHTTPWithOptions(cmd *cobra.Command, method string, args []strin
 	opts, err := c.httpOptsFromFlags(cmd)
 	if err != nil {
 		return err
+	}
+	if idempotencyProtected {
+		opts.RetryUnsafe = true
 	}
 	if bodyOpts.explicitAPIName != "" && c.apiPreservesHeaderCase(bodyOpts.explicitAPIName) {
 		opts.PreserveHeaderCase = true
@@ -255,7 +260,9 @@ func (c *CLI) runHTTPWithOptions(cmd *cobra.Command, method string, args []strin
 	opts = prepared.opts
 	c.populateRequestTrace(trace, apiName, profileName, inputSource, prepared)
 	trace.RenderBefore(c.Stderr, globalFlagsFromContext(requestContext(cmd)).Verbose)
-	c.warnRetryUnsafe(method, opts)
+	if !idempotencyProtected {
+		c.warnRetryUnsafe(method, opts)
+	}
 	if firstPartyHost == "" {
 		if u, parseErr := url.Parse(prepared.rawURL); parseErr == nil {
 			firstPartyHost = u.Scheme + "://" + u.Host

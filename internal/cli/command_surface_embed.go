@@ -53,6 +53,12 @@ type CommandSurface struct {
 	// schemas, examples, response models, and credential implementation names
 	// remain available to stock Restish without leaking into embedded products.
 	CompactOperationHelp bool
+
+	// AutomaticIdempotencyKeys turns a required OpenAPI Idempotency-Key header
+	// into an optional override flag and generates a value per invocation when
+	// omitted. It also permits retries for the operation's otherwise unsafe HTTP
+	// method. The zero value preserves stock Restish behavior.
+	AutomaticIdempotencyKeys bool
 }
 
 // SetCommandSurface changes the command tree exposed by an embedded CLI.
