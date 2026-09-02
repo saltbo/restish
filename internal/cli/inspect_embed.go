@@ -28,6 +28,7 @@ type OperationInspection struct {
 	Summary                string                              `json:"summary,omitempty"`
 	NoAuth                 bool                                `json:"noAuth,omitempty"`
 	OptionalAuth           bool                                `json:"optionalAuth,omitempty"`
+	RequiresIdempotencyKey bool                                `json:"requiresIdempotencyKey,omitempty"`
 	CredentialAlternatives [][]CredentialRequirementInspection `json:"credentialAlternatives,omitempty"`
 }
 
@@ -99,10 +100,20 @@ func (c *CLI) InspectAPI(ctx context.Context, apiName, profileName string) (APII
 		inspection.Operations = append(inspection.Operations, OperationInspection{
 			ID: id, Command: relativeCommandPath(apiCommand, command), Method: operation.Method,
 			Path: operation.Path, Summary: command.Short, NoAuth: operation.NoAuth,
-			OptionalAuth: operation.OptionalAuth, CredentialAlternatives: inspectCredentialAlternatives(operation.CredentialAlternatives),
+			OptionalAuth: operation.OptionalAuth, RequiresIdempotencyKey: operationRequiresIdempotencyKey(operation),
+			CredentialAlternatives: inspectCredentialAlternatives(operation.CredentialAlternatives),
 		})
 	}
 	return inspection, nil
+}
+
+func operationRequiresIdempotencyKey(operation spec.Operation) bool {
+	for _, param := range operation.Parameters {
+		if isRequiredIdempotencyKeyParam(param) {
+			return true
+		}
+	}
+	return false
 }
 
 func inspectCredentialAlternatives(alternatives []spec.CredentialAlternative) [][]CredentialRequirementInspection {

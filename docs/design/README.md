@@ -145,6 +145,7 @@ were a recurring source of remediation work.
 - [033-openapi-operation-security.md](./033-openapi-operation-security.md) - Operation-specific OpenAPI security policy, credential bindings, setup UX, and compatibility rules.
 - [044-dpop-credential-sources.md](./044-dpop-credential-sources.md) - Native RFC 9449 credential custody with provider-neutral token-source plugins.
 - [034-openapi-implementation-contract.md](./034-openapi-implementation-contract.md) - Implementation-grade OpenAPI 3.x behavior matrix for loading, command generation, parameters, servers, schemas, auth, media types, caching, and tests.
+- [046-automatic-idempotency-keys.md](./046-automatic-idempotency-keys.md) - Opt-in automatic idempotency for embedded products, including per-invocation generation and retry reuse.
 - [008-shorthand-input.md](./008-shorthand-input.md) - Building request bodies from CLI arguments and stdin using shorthand syntax.
 - [029-request-execution-pipeline.md](./029-request-execution-pipeline.md) - End-to-end request planning, execution order, cancellation, transport layering, normalization, filtering, and rendering.
 

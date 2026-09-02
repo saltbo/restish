@@ -7,6 +7,8 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
+
+	"github.com/saltbo/restish/v2/internal/cli"
 )
 
 // TestRetrySucceedsAfterTransientFailures verifies that when the server
@@ -126,6 +128,65 @@ func TestRetryReplaysPostWithUnsafeOptIn(t *testing.T) {
 	}
 	if !strings.Contains(stderr.String(), "--rsh-retry-unsafe is enabled") {
 		t.Fatalf("missing unsafe retry warning; stderr:\n%s", stderr.String())
+	}
+}
+
+func TestIdempotencyProtectedPostRetriesWithoutUnsafeWarning(t *testing.T) {
+	var callCount atomic.Int32
+	var keys []string
+	c, _, stderr := newTestCLI(t)
+	useTransport(c, func(r *http.Request) (*http.Response, error) {
+		keys = append(keys, r.Header.Get("Idempotency-Key"))
+		if callCount.Add(1) == 1 {
+			return &http.Response{
+				StatusCode: http.StatusServiceUnavailable,
+				Proto:      "HTTP/1.1",
+				Header:     http.Header{"Retry-After": []string{"0"}},
+				Body:       io.NopCloser(strings.NewReader("retry")),
+				Request:    r,
+			}, nil
+		}
+		return jsonResponse(http.StatusOK, `{"ok":true}`), nil
+	})
+
+	const key = `"0123456789abcdef0123456789abcdef"`
+	err := c.RunWithOptions([]string{
+		"restish", "post", "--rsh-no-cache", "--rsh-retry", "1",
+		"--rsh-header", "Idempotency-Key: " + key,
+		"https://api.example.com/items", "name:demo",
+	}, cli.RunOptions{IdempotencyProtected: true})
+	if err != nil {
+		t.Fatalf("run: %v", err)
+	}
+	if callCount.Load() != 2 {
+		t.Fatalf("request attempts = %d, want retry after 503", callCount.Load())
+	}
+	if len(keys) != 2 || keys[0] != key || keys[1] != key {
+		t.Fatalf("Idempotency-Key attempts = %#v, want repeated %q", keys, key)
+	}
+	if strings.Contains(stderr.String(), "retrying unsafe HTTP methods") {
+		t.Fatalf("idempotency-protected retry emitted unsafe warning: %s", stderr.String())
+	}
+}
+
+func TestRawArgvCannotEnableIdempotencyProtectedRetry(t *testing.T) {
+	var callCount atomic.Int32
+	c, _, _ := newTestCLI(t)
+	useTransport(c, func(r *http.Request) (*http.Response, error) {
+		callCount.Add(1)
+		return jsonResponse(http.StatusServiceUnavailable, `{}`), nil
+	})
+
+	err := c.Run([]string{
+		"restish", "post", "--rsh-no-cache", "--rsh-retry", "1",
+		"--rsh-header", `Idempotency-Key: "caller-key"`, "--rsh-idempotency-protected",
+		"https://api.example.com/items", "name:demo",
+	})
+	if err == nil || !strings.Contains(err.Error(), "unknown flag: --rsh-idempotency-protected") {
+		t.Fatalf("raw protected option error = %v", err)
+	}
+	if callCount.Load() != 0 {
+		t.Fatalf("raw protected option sent %d requests", callCount.Load())
 	}
 }
 

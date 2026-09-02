@@ -37,6 +37,10 @@ type DPoPCredentialSource = internal_auth.DPoPCredentialSource
 // loaders, formatters, paths, and I/O streams are initialized.
 type CLI = internalcli.CLI
 
+// RunOptions carries trusted per-invocation facts supplied by an embedding
+// product. It cannot be populated through Restish command-line arguments.
+type RunOptions = internalcli.RunOptions
+
 // Config is the Restish configuration loaded by CLI.Run.
 type Config = config.Config
 
@@ -106,6 +110,12 @@ type CredentialRequirement = spec.CredentialRequirement
 
 // CredentialAlternative is one AND-set in OpenAPI's OR-list security model.
 type CredentialAlternative = spec.CredentialAlternative
+
+// NewIdempotencyKey returns a cryptographically random RFC 8941 string value
+// suitable for an Idempotency-Key request header.
+func NewIdempotencyKey() (string, error) {
+	return internalcli.NewIdempotencyKey()
+}
 
 // ResponseMiddleware is trusted in-process normalized response middleware.
 type ResponseMiddleware = internalcli.ResponseMiddleware
